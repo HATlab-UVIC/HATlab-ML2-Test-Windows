@@ -10,7 +10,7 @@ public class RuntimeCameraDepthNormal : MonoBehaviour
     public Camera Cam;
     public Material Mat;
 
-    void OnEnable()
+    void Awake()
     {
         Cam.depthTextureMode = DepthTextureMode.Depth;
     }
@@ -26,12 +26,12 @@ public class RuntimeCameraDepthNormal : MonoBehaviour
 
         if ( Mat == null )
         {
-            Mat = new Material(Shader.Find("Hidden/Runtime Camera Depth Image Effect Shader"));
+            Mat = new Material(Shader.Find("Unlit/Runtime Camera Depth Unlit"));
         }
     }
 
-    /*private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        Graphics.Blit (source, destination, Mat);
-    }*/
+        Graphics.Blit(source, destination, Mat);
+    }
 }

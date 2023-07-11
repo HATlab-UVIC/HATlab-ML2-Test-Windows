@@ -15,9 +15,9 @@ MonoBehaviour:
   AllVoiceIntents: []
   VoiceCommandsToAdd:
   - Id: 101
-    Value: Lock
+    Value: Lock Plane
   - Id: 102
-    Value: Unlock
+    Value: Unlock Plane
   - Id: 103
     Value: Open Window
   - Id: 104

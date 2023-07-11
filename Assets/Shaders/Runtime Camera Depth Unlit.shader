@@ -9,8 +9,8 @@ Shader "Unlit/Runtime Camera Depth Unlit"
         Tags { "RenderType"="Opaque" }
         LOD 100
 
-        // Cull Offset
-        // ZWrite Offset
+        // Cull Off
+        //ZWrite Off
         // ZTest Always
 
         Pass
@@ -34,8 +34,10 @@ Shader "Unlit/Runtime Camera Depth Unlit"
             };
 
             sampler2D _MainTex;
-            sampler2D _CameraDepthTexture;
-            float4 _MainTex_ST;
+            UNITY_DECLARE_DEPTH_TEXTURE( _CameraDepthTexture );
+            // float4 _MainTex_ST;
+            
+
 
             v2f vert (appdata v)
             {
@@ -54,9 +56,19 @@ Shader "Unlit/Runtime Camera Depth Unlit"
                 // Sebastian Lague talks about this line in the portal video. Check it out.
                 float2 uv = i.uv.xy / i.uv.w;
 
+                // return float4(0, 1, 0, 1);
+
+                float depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, uv );
+                // float depth = tex2D(_CameraDepthTexture, uv).r;
+                depth = LinearEyeDepth(depth) /2;
+                return depth;
+
                 // https://forum.unity.com/threads/_cameradepthtexture-is-empty.768236/
-                float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
+                // depth = tex2D( _CameraDepthTexture, uv ).r;
+                
+                // float linearEyeDepth = far * near / ((near - far) * depth + far);
                 float linearEyeDepth = LinearEyeDepth(depth);
+                linearEyeDepth = linearEyeDepth / 2;
                 return float4(1-linearEyeDepth, 1-linearEyeDepth, 1-linearEyeDepth, 1);
 
                 // sample the texture
