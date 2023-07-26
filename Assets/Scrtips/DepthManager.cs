@@ -112,7 +112,7 @@ public class DepthManager : MonoBehaviour
                 case MLDepthCamera.CaptureFlags.AmbientRawDepthImage:
                     if (lastData.AmbientRawDepthImage != null)
                     {
-                        CheckAndCreateTexture((int)lastData.AmbientRawDepthImage.Value.Width, (int)lastData.AmbientRawDepthImage.Value.Height);
+                        CheckAndCreateTexture(imgRenderer, (int)lastData.AmbientRawDepthImage.Value.Width, (int)lastData.AmbientRawDepthImage.Value.Height);
 
                         // ambientRawImgMinDist = ambientDepthMin.GetComponentInChildren<Slider>().value;
                         // ambientRawImgMaxDist = ambientDepthMax.GetComponentInChildren<Slider>().value;
@@ -125,7 +125,7 @@ public class DepthManager : MonoBehaviour
                 case MLDepthCamera.CaptureFlags.DepthImage:
                     if (lastData.DepthImage != null)
                     {
-                        CheckAndCreateTexture((int)lastData.DepthImage.Value.Width, (int)lastData.DepthImage.Value.Height);
+                        CheckAndCreateTexture(imgRenderer, (int)lastData.DepthImage.Value.Width, (int)lastData.DepthImage.Value.Height);
 
                         statusText.text += "Texture created";
 
@@ -143,7 +143,7 @@ public class DepthManager : MonoBehaviour
                 case MLDepthCamera.CaptureFlags.Confidence:
                     if (lastData.ConfidenceBuffer != null)
                     {
-                        CheckAndCreateTexture((int)lastData.ConfidenceBuffer.Value.Width, (int)lastData.ConfidenceBuffer.Value.Height);
+                        CheckAndCreateTexture(imgRenderer, (int)lastData.ConfidenceBuffer.Value.Width, (int)lastData.ConfidenceBuffer.Value.Height);
 
                         // confidenceMinDist = confidenceMin.GetComponentInChildren<Slider>().value;
                         // confidenceMaxDist = confidenceMax.GetComponentInChildren<Slider>().value;
@@ -179,10 +179,13 @@ public class DepthManager : MonoBehaviour
         if (permission == MLPermission.Camera)
         {
             MLPluginLog.Error($"{permission} denied, example won't function.");
+            statusText.text = $"{permission} denied, example won't function.";
         }
         else if (permission == MLPermission.DepthCamera)
         {
             MLPluginLog.Error($"{permission} denied, example won't function.");
+            statusText.text = $"{permission} denied, example won't function.";
+
         }
     }
 
@@ -219,15 +222,23 @@ public class DepthManager : MonoBehaviour
         }
     }
 
-    private void CheckAndCreateTexture(int width, int height)
+    private void CheckAndCreateTexture(Renderer renderer, int width, int height)
     {
         if (ImageTexture == null || ImageTexture.width != width || ImageTexture.height != height)
         {
             ImageTexture = new Texture2D(width, height, TextureFormat.RFloat, false);
             ImageTexture.filterMode = FilterMode.Bilinear;
-            var material = confidenceRenderer.enabled ? confidenceRenderer.material : imgRenderer.material;
+            var material = renderer.material;
             material.mainTexture = ImageTexture;
             material.mainTextureScale = scale;
+        }
+        if (ImageTexture == null )
+        {
+            statusText.text += "Empty image texture did not go through";
+        }
+        else
+        {
+            statusText.text += "Empty image texture went through";
         }
     }
 
