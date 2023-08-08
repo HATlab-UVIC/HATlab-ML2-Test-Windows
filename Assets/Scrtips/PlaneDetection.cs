@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 public class PlaneDetection : MonoBehaviour
 {
     public GameObject planeSpawner;
+    public Material planeMaterial;
 
     private ARPlaneManager planeManager;
 
@@ -119,10 +120,12 @@ public class PlaneDetection : MonoBehaviour
             temp.GetComponent<MeshRenderer>().enabled = true;
             temp.GetComponent<PlanePrefabExample>().enabled = false;
 
-            var mat = temp.GetComponent<MeshRenderer>().material;
-            mat.color = color;
-            mat.renderQueue = color == Color.gray ? GRAY_PLANE_QUEUE : DEFAULT_PLANE_QUEUE;
-
+            // var mat = temp.GetComponent<MeshRenderer>().material;
+            temp.GetComponent<MeshRenderer>().material = planeMaterial;
+            // mat.color = color;
+            // mat.renderQueue = color == Color.gray ? GRAY_PLANE_QUEUE : DEFAULT_PLANE_QUEUE;
+            // mat = planeMaterial;
+            // mat.SetInteger("_StencilID", 1);
 
             temp.transform.parent = planeSpawner.transform;
             plane.gameObject.SetActive(false);
